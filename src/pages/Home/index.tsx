@@ -10,14 +10,15 @@ import {
   SaerchBar,
 } from "./styles";
 
-import GitLogo from "../../assets/icons/Type=github-brands.svg";
-import Company from "../../assets/icons/Type=building-solid.svg";
-import Followers from "../../assets/icons/Type=user-group-solid.svg";
 import LinkIcon from "../../assets/icons/Type=arrow-up-right-from-square-solid.svg";
 import { Card } from "../../components/Card";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Buildings, GithubLogo, Share, Users } from "phosphor-react";
+import { useTheme } from "styled-components";
 
 export function Home() {
+  const color = useTheme();
+
   return (
     <ProfileContainer>
       <ProfileContent>
@@ -30,7 +31,7 @@ export function Home() {
             <h1>Mateus Drumond</h1>
             <div>
               <a href="">GITHUB</a>
-              <img src={LinkIcon} alt="" />
+              <Share weight="fill" size={16} color={color["base-blue"]} />
             </div>
           </ProfileDescriptionHead>
           <ProfileDescriptionBody>
@@ -42,15 +43,15 @@ export function Home() {
           </ProfileDescriptionBody>
           <ProfileDescriptionFooter>
             <span>
-              <img src={GitLogo} alt="" />
+              <GithubLogo weight="fill" size={20} color={color["base-span"]} />
               <p>mateusfcd</p>
             </span>
             <span>
-              <img src={Company} alt="" />
+              <Buildings weight="fill" size={20} color={color["base-span"]} />
               <p>Rocketseat</p>
             </span>
             <span>
-              <img src={Followers} alt="" />
+              <Users weight="fill" size={20} color={color["base-span"]} />
               <p>32 seguidores</p>
             </span>
           </ProfileDescriptionFooter>
@@ -62,14 +63,24 @@ export function Home() {
       </Box>
       <SaerchBar placeholder="Buscar conteúdo" />
       <Grid>
-        <NavLink to={"/post"}>
+        <Link to={"/post"} style={{ textDecoration: "none" }}>
           <Card
             title="JavaScript data types and data structures"
             date="Há 1 dia"
             paragraphy="Programming languages all have built-in data structures, but these often differ from one language to another. This article attempts to list the built-in data structures available in "
           />
-        </NavLink>
+        </Link>
 
+        <Card
+          title="JavaScript data types and data structures"
+          date="Há 1 dia"
+          paragraphy="Programming languages all have built-in data structures, but these often differ from one language to another. This article attempts to list the built-in data structures available in "
+        />
+        <Card
+          title="JavaScript data types and data structures"
+          date="Há 1 dia"
+          paragraphy="Programming languages all have built-in data structures, but these often differ from one language to another. This article attempts to list the built-in data structures available in "
+        />
         <Card
           title="JavaScript data types and data structures"
           date="Há 1 dia"

@@ -61,9 +61,9 @@ export const ProfileDescriptionHead = styled.div`
     margin-right: 8px;
   }
 
-  img {
-    width: 12px;
-    height: 12px;
+  div {
+    display: flex;
+    align-items: start;
   }
 `;
 export const ProfileDescriptionBody = styled.div`
@@ -85,12 +85,6 @@ export const ProfileDescriptionFooter = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
-  }
-
-  img {
-    width: 18px;
-    height: 18px;
-    color: ${(props) => props.theme["base-background"]};
   }
 `;
 
