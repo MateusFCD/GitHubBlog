@@ -10,14 +10,70 @@ import {
   SaerchBar,
 } from "./styles";
 
-import LinkIcon from "../../assets/icons/Type=arrow-up-right-from-square-solid.svg";
 import { Card } from "../../components/Card";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Buildings, GithubLogo, Share, Users } from "phosphor-react";
 import { useTheme } from "styled-components";
+import axios from "axios";
+import { useEffect, useState } from "react";
+
+import { formatDistance } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
+interface UserData {
+  name: string;
+  company: string;
+  bio: string;
+  followers: number;
+  avatar_url: string;
+  login: string;
+  html_url: string;
+}
+
+interface PostData {
+  body: string;
+  number: number;
+  created_at: string;
+  html_url: string;
+  comments: number;
+  title: string;
+}
 
 export function Home() {
   const color = useTheme();
+  const [userData, setUserData] = useState<UserData>();
+  const [posts, setPosts] = useState<PostData[]>([]);
+
+  const userApi = () => {
+    const response = axios
+      .get(`https://api.github.com/users/mateusfcd`)
+      .then((response) => {
+        setUserData(response.data);
+      });
+    return response;
+  };
+
+  const post = () => {
+    const response = axios
+      .get(`https://api.github.com/repos/MateusFCD/GitHubBlog/issues`)
+      .then((response) => {
+        setPosts(response.data);
+        console.log(response.data);
+      });
+    return response;
+  };
+
+  function formatarData(data: string) {
+    const dataFormatada = formatDistance(new Date(data), new Date(), {
+      locale: ptBR,
+    });
+    return dataFormatada;
+  }
+
+  useEffect(() => {
+    userApi();
+    post();
+  }, []);
 
   return (
     <ProfileContainer>
@@ -28,64 +84,51 @@ export function Home() {
         />
         <ProfileDescription>
           <ProfileDescriptionHead>
-            <h1>Mateus Drumond</h1>
+            <h1>{userData?.name}</h1>
             <div>
-              <a href="">GITHUB</a>
+              <a href={userData?.html_url}>GITHUB</a>
               <Share weight="fill" size={16} color={color["base-blue"]} />
             </div>
           </ProfileDescriptionHead>
           <ProfileDescriptionBody>
-            <p>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-              Repudiandae nam enim nemo minus, ipsam rerum doloremque ratione
-              quis placeat optio fugiat?
-            </p>
+            <p>{userData?.bio}</p>
           </ProfileDescriptionBody>
           <ProfileDescriptionFooter>
             <span>
               <GithubLogo weight="fill" size={20} color={color["base-span"]} />
-              <p>mateusfcd</p>
+              <p>{userData?.login}</p>
             </span>
             <span>
               <Buildings weight="fill" size={20} color={color["base-span"]} />
-              <p>Rocketseat</p>
+              <p>{userData?.company}</p>
             </span>
             <span>
               <Users weight="fill" size={20} color={color["base-span"]} />
-              <p>32 seguidores</p>
+              <p>{userData?.followers} seguidores</p>
             </span>
           </ProfileDescriptionFooter>
         </ProfileDescription>
       </ProfileContent>
       <Box>
         <h1>Publicações</h1>
-        <span>2 publicações</span>
+        <span>{posts.length} publicações</span>
       </Box>
       <SaerchBar placeholder="Buscar conteúdo" />
       <Grid>
-        <Link to={"/post"} style={{ textDecoration: "none" }}>
-          <Card
-            title="JavaScript data types and data structures"
-            date="Há 1 dia"
-            paragraphy="Programming languages all have built-in data structures, but these often differ from one language to another. This article attempts to list the built-in data structures available in "
-          />
-        </Link>
-
-        <Card
-          title="JavaScript data types and data structures"
-          date="Há 1 dia"
-          paragraphy="Programming languages all have built-in data structures, but these often differ from one language to another. This article attempts to list the built-in data structures available in "
-        />
-        <Card
-          title="JavaScript data types and data structures"
-          date="Há 1 dia"
-          paragraphy="Programming languages all have built-in data structures, but these often differ from one language to another. This article attempts to list the built-in data structures available in "
-        />
-        <Card
-          title="JavaScript data types and data structures"
-          date="Há 1 dia"
-          paragraphy="Programming languages all have built-in data structures, but these often differ from one language to another. This article attempts to list the built-in data structures available in "
-        />
+        {posts.map((post) => (
+          <Link
+            to={"/post"}
+            style={{ textDecoration: "none" }}
+            key={post.number}
+          >
+            <Card
+              id={post.number}
+              title={post.title}
+              date={formatarData(post.created_at)}
+              paragraphy={post.body}
+            />
+          </Link>
+        ))}
       </Grid>
     </ProfileContainer>
   );

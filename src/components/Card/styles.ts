@@ -34,5 +34,11 @@ export const CardBox = styled.div`
     font-size: 16px;
     line-height: 160%;
     color: ${(props) => props.theme["base-text"]};
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5; /* number of lines to show */
+    -webkit-box-orient: vertical;
   }
 `;

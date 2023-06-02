@@ -4,6 +4,7 @@ interface CardProps {
   title: string;
   paragraphy: string;
   date: string;
+  id: number;
 }
 
 export function Card({ title, paragraphy, date }: CardProps) {
