@@ -8,6 +8,7 @@ interface CardProps {
 }
 
 export function Card({ title, paragraphy, date }: CardProps) {
+ 
   return (
     <CardContainer>
       <CardBox>

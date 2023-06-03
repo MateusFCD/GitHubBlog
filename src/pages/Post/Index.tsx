@@ -8,9 +8,6 @@ import {
   ContainerPostFooter,
 } from "./styles";
 
-import GitLogo from "../../assets/icons/Type=github-brands.svg";
-import Calendar from "../../assets/icons/Type=calendar-day-solid.svg";
-import Comment from "../../assets/icons/Type=comment-solid.svg";
 import {
   CalendarBlank,
   CaretLeft,
@@ -19,10 +16,54 @@ import {
   Share,
 } from "phosphor-react";
 import { useTheme } from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { formatDistance } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
+interface User {
+  login: string;
+}
+
+interface Data {
+  body: string;
+  number: number;
+  created_at: string;
+  html_url: string;
+  comments: number;
+  title: string;
+  user: User;
+}
 
 export function Post() {
   const color = useTheme();
+  const { issuesNumber } = useParams();
+  const [data, setData] = useState<Data>();
+
+  function formatarData(date: string) {
+    const dataFormatada = formatDistance(new Date(date), new Date(), {
+      locale: ptBR,
+    });
+    return dataFormatada;
+  }
+
+  const fetch = () => {
+    const response = axios
+      .get(
+        `https://api.github.com/repos/MateusFCD/GitHubBlog/issues/${issuesNumber}`
+      )
+      .then((response) => {
+        setData(response.data);
+        console.log(response.data);
+      });
+    return response;
+  };
+
+  useEffect(() => {
+    fetch();
+  }, []);
+
   return (
     <Container>
       <ContainerPost>
@@ -34,35 +75,30 @@ export function Post() {
             </span>
           </Link>
           <span>
-            <p>VER NO GITHUB</p>
+            <a href={data?.html_url}>VER NO GITHUB</a>
             <Share weight="fill" size={16} color={color["base-blue"]} />
           </span>
         </ContainerPostHeader>
         <ContainerPostTitle>
-          <h1>Post</h1>
+          <h1>{data?.title}</h1>
         </ContainerPostTitle>
         <ContainerPostFooter>
           <span>
             <GithubLogo weight="fill" size={20} color={color["base-span"]} />
-            <p>mateusfcd</p>
+            <p>{data?.user.login}</p>
           </span>
           <span>
             <CalendarBlank weight="fill" size={20} color={color["base-span"]} />
-            <p>Há 1 dia</p>
+            <p>{data?.created_at}</p>
           </span>
           <span>
             <ChatCircle weight="fill" size={20} color={color["base-span"]} />
-            <p>5 comentários</p>
+            <p>{data?.comments}comentários</p>
           </span>
         </ContainerPostFooter>
       </ContainerPost>
       <ContainerTextPost>
-        <Text>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Amet debitis
-          hic possimus quia ullam praesentium tempore dignissimos asperiores,
-          excepturi similique ut officiis incidunt nesciunt dolorem quasi
-          corporis, nobis, sunt id?
-        </Text>
+        <Text>{data?.body}</Text>
       </ContainerTextPost>
     </Container>
   );

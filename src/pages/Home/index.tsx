@@ -11,7 +11,7 @@ import {
 } from "./styles";
 
 import { Card } from "../../components/Card";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Buildings, GithubLogo, Share, Users } from "phosphor-react";
 import { useTheme } from "styled-components";
 import axios from "axios";
@@ -37,12 +37,17 @@ interface PostData {
   html_url: string;
   comments: number;
   title: string;
+  login: string;
 }
+
+const texto: string = "";
 
 export function Home() {
   const color = useTheme();
   const [userData, setUserData] = useState<UserData>();
   const [posts, setPosts] = useState<PostData[]>([]);
+
+  const navigate = useNavigate();
 
   const userApi = () => {
     const response = axios
@@ -116,10 +121,9 @@ export function Home() {
       <SaerchBar placeholder="Buscar conteúdo" />
       <Grid>
         {posts.map((post) => (
-          <Link
-            to={"/post"}
-            style={{ textDecoration: "none" }}
+          <div
             key={post.number}
+            onClick={() => navigate(`/post/${post.number}`)}
           >
             <Card
               id={post.number}
@@ -127,9 +131,20 @@ export function Home() {
               date={formatarData(post.created_at)}
               paragraphy={post.body}
             />
-          </Link>
+          </div>
         ))}
       </Grid>
     </ProfileContainer>
   );
 }
+
+// {
+//   state: {
+//     title: post.title,
+//     date: formatarData(post.created_at),
+//     paragraphy: post.body,
+//     comments: post.comments,
+//     html_url: post.html_url,
+//     body: post.body,
+//   },
+// }

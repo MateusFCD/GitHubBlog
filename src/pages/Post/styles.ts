@@ -42,6 +42,16 @@ export const ContainerPostHeader = styled.div`
     font-size: 12px;
     line-height: 160%;
   }
+
+  a {
+    font-family: "Nunito";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 160%;
+    text-decoration: none;
+    color: ${(props) => props.theme["base-blue"]};
+  }
 `;
 
 export const ContainerPostTitle = styled.div`
