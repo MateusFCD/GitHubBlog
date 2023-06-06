@@ -20,7 +20,11 @@ import { useEffect, useState } from "react";
 import { formatDistance } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
-interface UserData {
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+interface UserData { 
   name: string;
   company: string;
   bio: string;
@@ -40,12 +44,22 @@ interface PostData {
   login: string;
 }
 
-const texto: string = "";
+const schema = z.object({
+  query: z.string(),
+});
+
+type SearchFormInputs = z.infer<typeof schema>;
 
 export function Home() {
   const color = useTheme();
   const [userData, setUserData] = useState<UserData>();
   const [posts, setPosts] = useState<PostData[]>([]);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SearchFormInputs>({resolver: zodResolver(schema)});
 
   const navigate = useNavigate();
 

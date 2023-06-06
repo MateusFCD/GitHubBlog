@@ -22,6 +22,8 @@ import { useEffect, useState } from "react";
 import { formatDistance } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+
 interface User {
   login: string;
 }
@@ -41,13 +43,6 @@ export function Post() {
   const { issuesNumber } = useParams();
   const [data, setData] = useState<Data>();
 
-  function formatarData(date: string) {
-    const dataFormatada = formatDistance(new Date(date), new Date(), {
-      locale: ptBR,
-    });
-    return dataFormatada;
-  }
-
   const fetch = () => {
     const response = axios
       .get(
@@ -59,6 +54,13 @@ export function Post() {
       });
     return response;
   };
+
+  function formatarData(date: any) {
+    const dataFormatada = formatDistance(new Date(date), new Date(), {
+      locale: ptBR,
+    });
+    return dataFormatada;
+  }
 
   useEffect(() => {
     fetch();
@@ -98,7 +100,7 @@ export function Post() {
         </ContainerPostFooter>
       </ContainerPost>
       <ContainerTextPost>
-        <Text>{data?.body}</Text>
+        <ReactMarkdown children={data?.body} />
       </ContainerTextPost>
     </Container>
   );
